@@ -4,21 +4,23 @@ import MainImage from '../LandingPage/Sections/MainImage';
 import MovieInfo from './Sections/MovieInfo';
 import GridCards from '../commons/GridCards';
 import { Row } from 'antd';
+import Favorite from './Sections/Favorite';
 
 function MovieDetail(props) {
 
+    const movieId = props.match.params.movieId;
     const [Movie, setMovie] = useState([]);
     const [Casts, setCasts] = useState([]);
     const [ActorToggle, setActorToggle] = useState(false);
 
     useEffect(() => {
-        fetch(`${API_URL}movie/${props.match.params.movieId}?api_key=${API_KEY}`)
+        fetch(`${API_URL}movie/${movieId}?api_key=${API_KEY}`)
             .then(res => res.json())
             .then(res => {
                 setMovie(res);
             });
 
-        fetch(`${API_URL}movie/${props.match.params.movieId}/credits?api_key=${API_KEY}`)
+        fetch(`${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`)
             .then(res => res.json())
             .then(res => {
                 setCasts(res.cast);
@@ -40,6 +42,10 @@ function MovieDetail(props) {
 
         {/* Body */}
         <div style={{width:'85%', margin:'1rem auto'}}>
+            <div style={{display:'flex', justifyContent:'flex-end'}}>
+                <Favorite movieInfo={Movie} movieId={movieId} userFrom={localStorage.getItem('userId')}/>
+            </div>
+
             {/* Movie Info */}
             <MovieInfo movie={Movie}/>
 
